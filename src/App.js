@@ -1,283 +1,702 @@
-"use client";
 import React from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { Cpu, Layers, Shield, Cable, Sun, Building2, Lock, MapPin, Phone, Mail } from "lucide-react";
-import LOGO from "./assets/images/Hypernext Logo Blue.png";
+import logo from "./assets/images/Hypernext Logo Blue.png";
+import { motion } from "framer-motion";
+import {
+  Check,
+  Cpu,
+  Leaf,
+  Shield,
+  Thermometer,
+  Zap,
+  Building2,
+  Globe,
+  Sparkles,
+  Award,
+  Users,
+  Newspaper,
+  MapPin,
+  Phone,
+  Mail,
+  ArrowRight,
+  Server,
+  Battery,
+  MoveRight,
+  Droplet,
+} from "lucide-react";
 
+/*************************************************
+ * BRAND SYSTEM (from logo)
+ *************************************************/
+const BRAND = {
+  primary: "#003366", // navy
+  accent: "#00AEEF", // cyan
+  bgLight: "#F5F9FC", // softer light
+  line: "#E6EEF5", // hairline borders
+  text: "#0B1F33",
+  muted: "#5B6B7C",
+};
 
-// Minimal inline Button (no external deps)
-function Button({ children, className = "", variant = "solid", size = "md", ...props }) {
-  const base = "inline-flex items-center justify-center font-medium transition rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2";
-  const sz = size === "lg" ? "h-11 px-6 text-sm" : size === "sm" ? "h-8 px-4 text-xs" : "h-10 px-5 text-sm";
+const cn = (...classes) => classes.filter(Boolean).join(" ");
+
+/*************************************************
+ * REUSABLE UI (minimal)
+ *************************************************/
+function Button({ 
+  children, 
+  className = "", 
+  variant = "solid", 
+  size = "md", 
+  asChild = false, 
+  ...rest 
+}) {
+  const base = "inline-flex items-center justify-center rounded-xl transition-all duration-200";
   const variants = {
-    solid: "bg-[var(--ink)] text-white hover:opacity-90",
-    outline: "border border-[var(--ink)] text-[var(--ink)] hover:bg-[var(--ink)] hover:text-white",
-    brand: "bg-[var(--brand)] text-[var(--ink)] hover:opacity-90",
-    ghost: "text-[var(--ink)] hover:bg-black/5",
+    solid: "bg-blue-600 text-white hover:bg-blue-700",
+    outline: "border border-blue-600 text-blue-600 hover:bg-blue-50",
+    ghost: "text-blue-600 hover:bg-blue-50",
   };
-  const v = variants[variant] || variants.solid;
-  return <button className={`${base} ${sz} ${v} ${className}`} {...props}>{children}</button>;
-}
+  const sizes = {
+    sm: "px-2 py-1 text-sm",
+    md: "px-4 py-2 text-base",
+    lg: "px-6 py-3 text-lg",
+  };
 
-function DeviceFrame({ children, caption }) {
-  return (
-    <div className="mx-auto w-full max-w-4xl rounded-[2rem] border border-slate-200 bg-white/60 backdrop-blur-xl shadow-[0_20px_60px_rgba(2,6,23,0.08)]">
-      <div className="h-10 flex items-center justify-center"><div className="h-1.5 w-24 rounded-full bg-slate-200" /></div>
-      <div className="px-6 pb-6">{children}</div>
-      {caption ? (<div className="px-6 pb-6 text-center text-xs text-slate-500">{caption}</div>) : null}
-    </div>
-  );
-}
+  const styles = {
+    ...rest.style,
+  };
 
-function Stat({ k, v, sub }) {
-  return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-      <div className="text-3xl font-semibold tracking-tight">{v}</div>
-      <div className="mt-1 text-sm text-slate-700">{k}</div>
-      {sub ? <div className="text-xs text-slate-500">{sub}</div> : null}
-    </div>
-  );
-}
+  if (asChild && React.isValidElement(children)) {
+    return React.cloneElement(children, {
+      className: `${children.props.className || ""} ${base} ${variants[variant]} ${sizes[size]} ${className}`,
+      style: { ...(children.props.style || {}), ...styles },
+      ...rest,
+    });
+  }
 
-function Pill({ children }) {
   return (
-    <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-3 py-1 text-xs text-slate-700">
+    <button
+      className={`${base} ${variants[variant]} ${sizes[size]} ${className}`}
+      style={styles}
+      {...rest}
+    >
       {children}
-    </span>
+    </button>
   );
 }
 
-export default function HypernextAppleStyle() {
-  const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 600], [0, -40]);
-  const scale = useTransform(scrollY, [0, 600], [1, 0.985]);
-
-  // Balanced dual brand colors
-  const cssVars = {
-    "--brand": "#00FF40", // green accent
-    "--ink": "#0B1220",  // deep navy
-  };
-
+function Card({ className = "", children, style }) {
   return (
-    <div className="bg-white text-slate-900 font-[system-ui]" style={cssVars}>
-      {/* Header */}
-      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur border-b border-[var(--ink)]/20">
-        <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <img src={LOGO} alt="Hypernext" className="h-8 w-auto" />
-            <span className="font-semibold tracking-tight text-[var(--ink)]">Hypernext Data Center Limited</span>
-          </div>
-          <div className="hidden sm:flex items-center gap-2">
-            <Button variant="ghost">Overview</Button>
-            <Button variant="ghost">Technology</Button>
-            <Button variant="ghost">Campuses</Button>
-            <Button variant="solid">Talk to Sales</Button>
-          </div>
-        </div>
-      </header>
+    <div
+      className={cn("rounded-lg border bg-white", className)}
+      style={{ borderColor: BRAND.line, boxShadow: "none", ...(style || {}) }}
+    >
+      {children}
+    </div>
+  );
+}
 
-      {/* HERO */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0" style={{background:"linear-gradient(180deg, rgba(0,255,64,0.08) 0%, rgba(11,18,32,0.05) 40%, #ffffff 100%)"}} />
-        <div className="relative mx-auto max-w-7xl px-6 py-24 md:py-28 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <h1 className="text-5xl md:text-6xl font-semibold leading-tight tracking-tight text-[var(--ink)]">AI‑Ready. Tier IV. Built for the GPU era.</h1>
-            <p className="mt-6 text-lg text-slate-600 max-w-xl">Patented closed‑loop direct‑to‑chip liquid cooling and the HyperOne™ Operating System power our hyperscale campuses across India.</p>
-            <div className="mt-6 flex flex-wrap gap-2">
-              <Pill>Patented Liquid Cooling</Pill>
-              <Pill>HyperOne™ DCOS</Pill>
-              <Pill>Tier IV Design</Pill>
-              <Pill>SOC 2‑as‑a‑Service</Pill>
-              <Pill>7‑Layer Security</Pill>
+function CardHeader({ className = "", children }) {
+  return <div className={cn("p-6 pb-2", className)}>{children}</div>;
+}
+
+function CardTitle({ className = "", children }) {
+  return (
+    <div className={cn("text-lg font-semibold", className)} style={{ color: BRAND.primary }}>
+      {children}
+    </div>
+  );
+}
+
+function CardContent({ className = "", children }) {
+  return <div className={cn("p-6 pt-2", className)}>{children}</div>;
+}
+
+
+
+/*************************************************
+ * BRAND / LOGO
+ *************************************************/
+const LOGO = "/mnt/data/Hypernext Logo Blue.png";
+function BrandLogo({ size = 36 }) {
+  const h = typeof size === "number" ? `${size}px` : size;
+  return (
+    <div className="flex items-center gap-3">
+      <img src={logo} alt="Hypernext" className="select-none" style={{ height: h }} />
+      
+    </div>
+  );
+}
+
+/*************************************************
+ * CONTENT DATA
+ *************************************************/
+const nav = [
+  { label: "Why Hypernext", href: "#why" },
+  { label: "Products", href: "#products" },
+  { label: "HyperOne OS", href: "#hyperone" },
+  { label: "Campuses", href: "#campuses" },
+  { label: "Sustainability", href: "#sustainability" },
+  { label: "Customers", href: "#customers" },
+  { label: "News", href: "#news" },
+  { label: "Careers", href: "#careers" },
+  { label: "Contact", href: "#contact" },
+];
+
+const stats = [
+  { value: "110 MW", label: "Hyderabad IT Load" },
+  { value: "192 MW", label: "Vizag IT Load (CLS)" },
+  { value: "Tier IV", label: "Fault-Tolerant" },
+  { value: "99.995%", label: "Availability" },
+  { value: "≤ 1.15", label: "PUE target" },
+];
+
+const features = [
+  {
+    icon: <Thermometer className="h-5 w-5" style={{ color: BRAND.primary }} />,
+    title: "Hybrid Direct-to-Chip Cooling",
+    desc: "Liquid + air optimized manifolds; warm-water loops; hot-/cold-aisle containment for 30–100kW+ racks.",
+  },
+  {
+    icon: <Shield className="h-5 w-5" style={{ color: BRAND.primary }} />,
+    title: "Zero-Downtime Resilience",
+    desc: "2N/2N+1 power, concurrently maintainable paths, active-active regions, and DR runbooks.",
+  },
+  {
+    icon: <Building2 className="h-5 w-5" style={{ color: BRAND.primary }} />,
+    title: "Carrier/Cloud Rich",
+    desc: "Neutral meet-me rooms, CLS adjacency, cloud on-ramps, and private interconnects.",
+  },
+];
+
+const campuses = [
+  {
+    city: "Hyderabad",
+    badge: "AI Compute Hub",
+    mw: "110 MW",
+    points: ["Fintech and SaaS edge", "Cloud on-ramps", "Liquid-ready bays"],
+  },
+  {
+    city: "Vizag (Visakhapatnam)",
+    badge: "DC + CLS",
+    mw: "192 MW",
+    points: ["Tier IV build", "Cable Landing Station adjacency", "Green power PPAs"],
+  },
+];
+
+const products = [
+  {
+    icon: <Server className="h-5 w-5" style={{ color: BRAND.primary }} />,
+    title: "Colocation",
+    desc: "From racks to private suites with 2N power, dedicated cooling, and hardened security.",
+    bullets: ["30–100kW+/rack", "2N UPS + generators", "Smart hands 24x7"],
+  },
+  {
+    icon: <Cpu className="h-5 w-5" style={{ color: BRAND.primary }} />,
+    title: "GPUaaS / Bare-Metal",
+    desc: "Elastic H100/MI300 clusters—multi-tenant or dedicated. Scale to thousands of GPUs.",
+    bullets: ["InfiniBand / RoCE", "Secure tenancy", "API & portal"],
+  },
+  {
+    icon: <Battery className="h-5 w-5" style={{ color: BRAND.primary }} />,
+    title: "Energy & Edge",
+    desc: "Green PPAs, BESS and microgrids; regional edge sites for sub-5ms experiences.",
+    bullets: ["Hourly REC match", "BESS failover", "Edge PoPs"],
+  },
+  {
+    icon: <Globe className="h-5 w-5" style={{ color: BRAND.primary }} />,
+    title: "HyperOne OS",
+    desc: "Data center operating system: single control plane for power, cooling, network, compute & security.",
+    bullets: ["Single pane of control", "Policy & automation", "APIs & integrations"],
+  },
+];
+
+const customers = [
+  { name: "Financial Services", copy: "Low-latency trading, sovereign compliance, PCI-ready." },
+  { name: "AI / Life Sciences", copy: "Petascale training, DGX-class nodes, warm-water loops." },
+  { name: "Media & Gaming", copy: "Edge rendering, CDN peering, burstable compute." },
+  { name: "Public Sector", copy: "Regional data residency and high-assurance controls." },
+];
+
+const news = [
+  { title: "Hypernext announces 192MW multi-phase build", date: "Aug 2025", link: "#" },
+  { title: "Hybrid direct-to-chip cooling patent granted", date: "Jun 2025", link: "#" },
+  { title: "600MW captive solar plant (Khavda) announced", date: "May 2025", link: "#" },
+];
+
+const contactInfo = {
+  address: "13rd Floor, Building 9, Raheja Mindspace Madhapur IT Park, Hyderabad - 500081",
+  phone: "+91 9878423333",
+  email: "info@hypernxt.com",
+};
+
+/*************************************************
+ * ANIMATIONS
+ *************************************************/
+const fade = {
+  initial: { opacity: 0, y: 8 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, amount: 0.2 },
+  transition: { duration: 0.4 },
+};
+
+/*************************************************
+ * DEV SMOKE TESTS (non-blocking)
+ *************************************************/
+function SmokeTests() {
+  React.useEffect(() => {
+    try {
+      console.assert(nav.length === 9, "nav should have 9 items");
+      console.assert(products.some((p) => /HyperOne/.test(p.title)), "HyperOne product present");
+      console.assert(campuses.length === 2, "Two campuses only (Hyd + Vizag)");
+      console.assert(campuses[0].mw === "110 MW" && campuses[1].mw === "192 MW", "MW figures correct");
+      console.assert(/CLS/.test(campuses[1].badge), "Vizag badge includes CLS");
+    } catch (e) {
+      console.error("Smoke tests error", e);
+    }
+  }, []);
+  return null;
+}
+
+/*************************************************
+ * LAYOUT SECTIONS (MINIMAL)
+ *************************************************/
+function Header() {
+  return (
+    <header className="sticky top-0 z-50 border-b bg-white/90 backdrop-blur">
+      <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
+        <BrandLogo />
+        <nav className="hidden md:flex gap-6 text-sm">
+          {nav.map((n) => (
+            <a key={n.href} href={n.href} className="text-slate-600 hover:text-slate-900">
+              {n.label}
+            </a>
+          ))}
+        </nav>
+        <div className="hidden md:flex items-center gap-3">
+          <Button asChild variant="secondary">
+            <a href="#contact">Talk to Sales</a>
+          </Button>
+          <Button asChild>
+            <a href="#products">Launch Portal</a>
+          </Button>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+function Hero() {
+  return (
+    <section className="relative isolate overflow-hidden bg-white">
+      <div className="mx-auto max-w-7xl px-6 py-20 grid lg:grid-cols-12 gap-10 items-center">
+        <motion.div {...fade} className="lg:col-span-7">
+          <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs border" style={{ borderColor: BRAND.line, color: BRAND.muted }}>
+            <Sparkles className="h-3.5 w-3.5" style={{ color: BRAND.primary }} /> Responsible, Tier IV, 100% renewable
+          </div>
+          <h1 className="mt-4 text-5xl font-extrabold leading-tight" style={{ color: BRAND.text }}>
+            The responsible data center for the AI decade
+          </h1>
+          <p className="mt-5 text-base max-w-2xl" style={{ color: BRAND.muted }}>
+            Hypernext operates Tier IV, fault-tolerant campuses powered by <strong style={{color: BRAND.primary}}>100% renewable energy</strong>—designed for dense GPU workloads and strict compliance.
+          </p>
+          <div className="mt-6 flex flex-col sm:flex-row gap-3">
+            <Button asChild>
+              <a href="#why" aria-label="Explore the Hypernext platform" className="inline-flex items-center">
+                Explore the platform <MoveRight className="ml-2 h-4 w-4" />
+              </a>
+            </Button>
+            <Button asChild variant="secondary">
+              <a href="#campuses" aria-label="See Hypernext campuses">See our campuses</a>
+            </Button>
+          </div>
+
+          {/* Trust badges */}
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="flex items-center gap-2 text-sm">
+              <Leaf className="h-4 w-4" style={{ color: BRAND.primary }} />
+              <span style={{ color: BRAND.text }}>100% renewable energy</span>
             </div>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Button size="lg" variant="brand">Get Reference Design</Button>
-              <Button size="lg" variant="outline">Download Overview</Button>
+            <div className="flex items-center gap-2 text-sm">
+              <Shield className="h-4 w-4" style={{ color: BRAND.primary }} />
+              <span style={{ color: BRAND.text }}>Tier IV fault-tolerant design</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm">
+              <Award className="h-4 w-4" style={{ color: BRAND.primary }} />
+              <span style={{ color: BRAND.text }}>ISO 27001/22301/14001 • SOC 2 (ready)</span>
             </div>
           </div>
-          <motion.div style={{ y, scale }}>
-            <DeviceFrame caption="Engineered for the trillion‑token era">
-              <div className="aspect-[16/9] rounded-2xl bg-gradient-to-br from-slate-100 to-white border border-slate-200 grid place-items-center">
-                <Cpu className="w-16 h-16" style={{color:'var(--brand)'}} />
+
+          {/* Slim KPI strip */}
+          <div className="mt-10 grid grid-cols-2 sm:grid-cols-5 gap-0 border-t border-b" style={{ borderColor: BRAND.line }}>
+            {stats.map((s) => (
+              <div key={s.label} className="py-4 px-3 flex flex-col">
+                <span className="text-base font-semibold" style={{ color: BRAND.text }}>{s.value}</span>
+                <span className="text-xs" style={{ color: BRAND.muted }}>{s.label}</span>
               </div>
-            </DeviceFrame>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* STATS STRIP */}
-      <section className="border-y border-slate-200 bg-white/60">
-        <div className="mx-auto max-w-7xl px-6 py-10 grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Stat k="Hyderabad" v="100 MW" sub="AI‑ready campus" />
-          <Stat k="Andhra Pradesh" v="192 MW" sub="GPU‑first clusters" />
-          <Stat k="Kutch Solar" v="600 MW" sub="Utility‑scale green PPA" />
-          <Stat k="Vizag" v="CLS" sub="Cable Landing Station (upcoming)" />
-        </div>
-      </section>
-
-      {/* TECHNOLOGY — COOLING */}
-      <section className="py-20">
-        <div className="mx-auto max-w-7xl px-6 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-          <div className="order-2 lg:order-1">
-            <h2 className="text-3xl font-semibold text-[var(--ink)]">Closed‑Loop Direct‑to‑Chip Cooling</h2>
-            <p className="mt-4 text-slate-600">Sealed secondary loop with quick‑disconnect plates and zone isolation. Designed for GPU trays with field‑swappable plates and leak containment.</p>
-            <ul className="mt-4 text-sm text-slate-700 list-disc pl-5 space-y-1">
-              <li>40–80 kW+ AI rack density ready</li>
-              <li>Drip‑less couplings, leak detection & containment</li>
-              <li>Service isolation for hot‑swap plates</li>
-            </ul>
+            ))}
           </div>
-          <div className="order-1 lg:order-2">
-            <DeviceFrame caption="D2C manifold concept">
-              <div className="relative aspect-[10/7] rounded-2xl border border-slate-200 overflow-hidden">
-                <div className="absolute inset-0 opacity-30" style={{background:"radial-gradient(900px 300px at 20% 15%, rgba(0,255,64,0.10) 0%, transparent 60%), radial-gradient(800px 280px at 85% 85%, rgba(11,18,32,0.10) 0%, transparent 60%)"}} />
-                <motion.div initial={{ width: 0 }} whileInView={{ width: "88%" }} viewport={{ once: true, amount: 0.4 }} transition={{ duration: 1.0, ease: "easeOut" }} className="absolute left-6 top-10 h-2 rounded-full" style={{background:"rgba(11,18,32,0.55)", boxShadow:"0 0 20px rgba(11,18,32,0.25)"}} />
-                <motion.div initial={{ height: 0 }} whileInView={{ height: "72%" }} viewport={{ once: true, amount: 0.4 }} transition={{ duration: 1.0, delay: 0.12, ease: "easeOut" }} className="absolute left-6 top-10 w-2 rounded-full" style={{background:"rgba(0,255,64,0.65)", boxShadow:"0 0 22px rgba(0,255,64,0.45)"}} />
-                <div className="absolute inset-0 grid grid-cols-3 gap-4 p-6">
-                  {[0,1,2,3,4,5].map(i => (
-                    <motion.div key={i} initial={{ opacity: 0, scale: 0.97 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.4, delay: 0.06 * i }} className="rounded-xl border bg-gradient-to-br from-white to-slate-50" style={{borderColor:"rgba(11,18,32,0.2)"}} />
-                  ))}
-                </div>
-              </div>
-            </DeviceFrame>
-          </div>
-        </div>
-      </section>
+        </motion.div>
 
-      {/* TECHNOLOGY — HYPERONE */}
-      <section className="py-20 bg-slate-50">
-        <div className="mx-auto max-w-7xl px-6 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-          <div>
-            <DeviceFrame caption="HyperOne™ unified telemetry (concept)">
-              <div className="relative aspect-[10/7] rounded-2xl border border-slate-200 overflow-hidden p-6">
-                <div className="grid grid-cols-3 gap-4">
-                  {["PUE","kW","°C","CFD","Latency","Carbon"].map((t,i)=> (
-                    <motion.div key={t} initial={{opacity:0,y:10}} whileInView={{opacity:1,y:0}} viewport={{once:true, amount:0.3}} transition={{duration:0.4, delay:0.06*i}} className="rounded-xl border bg-white p-4" style={{borderColor:"rgba(11,18,32,0.18)", boxShadow:"0 0 10px rgba(0,255,64,0.08)"}}>
-                      <div className="text-xs text-slate-500">{t}</div>
-                      <div className="mt-1 text-xl font-semibold text-[var(--ink)]">{t==="PUE"?"1.09":t==="kW"?"78,240":t==="°C"?"29.4":t==="Latency"?"1.8 ms":t==="Carbon"?"‑37%":"OK"}</div>
-                    </motion.div>
-                  ))}
-                </div>
-                <motion.div initial={{ width: 0 }} whileInView={{ width: "100%" }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.9, ease: "easeOut" }} className="mt-6 h-24 rounded-xl border p-3" style={{borderColor:"rgba(11,18,32,0.2)"}}>
-                  <div className="h-full w-full rounded-md bg-gradient-to-b from-slate-50 to-white relative overflow-hidden">
-                    <motion.svg initial={{ x: -200 }} animate={{ x: 0 }} transition={{ repeat: Infinity, duration: 6, ease: "linear" }} viewBox="0 0 600 120" className="absolute inset-0" style={{color:"#00FF40"}}>
-                      <path d="M0,60 C60,20 120,100 180,60 240,20 300,100 360,60 420,20 480,100 540,60 600,20 660,100 720,60" fill="none" stroke="currentColor" strokeWidth="2" />
-                    </motion.svg>
-                  </div>
-                </motion.div>
-              </div>
-            </DeviceFrame>
-          </div>
-          <div>
-            <h2 className="text-3xl font-semibold text-[var(--ink)]">HyperOne™ Data Center Operating System</h2>
-            <p className="mt-4 text-slate-600">Unified telemetry, capacity orchestration, and predictive maintenance across facilities, energy, and interconnects — presented in a calm, operator‑first UI.</p>
-            <ul className="mt-4 text-sm text-slate-700 list-disc pl-5 space-y-1">
-              <li>Observability: racks → grid, live</li>
-              <li>Optimization: carbon‑aware scheduling</li>
-              <li>Automation: playbooks & SOAR hooks</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      {/* CAMPUSES */}
-      <section className="py-20">
-        <div className="mx-auto max-w-7xl px-6">
-          <h2 className="text-3xl font-semibold text-[var(--ink)]">Campuses & Energy</h2>
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="rounded-3xl p-6 border shadow-sm" style={{borderColor:"rgba(11,18,32,0.15)", background:"linear-gradient(135deg, rgba(0,255,64,0.05), rgba(11,18,32,0.04))"}}>
-              <div className="flex items-center gap-2"><Building2 className="w-5 h-5"/><h3 className="font-medium">Hyderabad — 100 MW</h3></div>
-              <p className="mt-2 text-sm text-slate-600">GPU‑dense halls, SOC/NOC, liquid‑cooling manifolds, 7‑layer security.</p>
-            </div>
-            <div className="rounded-3xl p-6 border shadow-sm" style={{borderColor:"rgba(11,18,32,0.15)", background:"linear-gradient(135deg, rgba(0,255,64,0.05), rgba(11,18,32,0.04))"}}>
-              <div className="flex items-center gap-2"><Building2 className="w-5 h-5"/><h3 className="font-medium">Andhra Pradesh — 192 MW</h3></div>
-              <p className="mt-2 text-sm text-slate-600">Twin halls, Tier IV objectives, HyperOne™ telemetry, dark fiber IX links.</p>
-            </div>
-            <div className="rounded-3xl p-6 border shadow-sm" style={{borderColor:"rgba(11,18,32,0.15)", background:"linear-gradient(135deg, rgba(0,255,64,0.05), rgba(11,18,32,0.04))"}}>
-              <div className="flex items-center gap-2"><Sun className="w-5 h-5"/><h3 className="font-medium">Kutch, Gujarat — 600 MW Solar</h3></div>
-              <p className="mt-2 text-sm text-slate-600">Utility‑scale renewable energy, RECs, carbon‑aware scheduling.</p>
-            </div>
-            <div className="rounded-3xl p-6 border shadow-sm" style={{borderColor:"rgba(11,18,32,0.15)", background:"linear-gradient(135deg, rgba(0,255,64,0.05), rgba(11,18,32,0.04))"}}>
-              <div className="flex items-center gap-2"><Cable className="w-5 h-5"/><h3 className="font-medium">Vizag — Cable Landing Station</h3></div>
-              <p className="mt-2 text-sm text-slate-600">Upcoming subsea landing, diverse paths, low‑latency metro access.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* SECURITY & COMPLIANCE */}
-      <section className="py-20 bg-slate-50">
-        <div className="mx-auto max-w-7xl px-6 grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
-          <div>
-            <h2 className="text-3xl font-semibold text-[var(--ink)]">7‑Layer Security</h2>
-            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {["Perimeter & Vehicle","Guarded Entry","Building Access","Data Hall","Cage/Suite","Rack","Logical & SOC"].map((t)=> (
-                <div key={t} className="rounded-2xl border bg-white p-4 flex gap-3 items-start" style={{borderColor:"rgba(11,18,32,0.15)"}}>
-                  <Lock className="w-4 h-4 mt-1"/>
-                  <div>
-                    <div className="font-medium text-sm">{t}</div>
-                    <div className="text-xs text-slate-600">Layered controls with auditing and monitoring.</div>
-                  </div>
-                </div>
+        <motion.div {...fade} className="lg:col-span-5">
+          <div className="rounded-lg border p-6" style={{ background: "#fff", borderColor: BRAND.line }}>
+            <div className="text-sm" style={{ color: BRAND.muted }}>Reference layout</div>
+            <div className="mt-3 grid grid-cols-3 gap-3">
+              {Array.from({ length: 9 }).map((_, i) => (
+                <div key={i} className="h-16 rounded border" style={{ borderColor: BRAND.line, background: BRAND.bgLight }} />
               ))}
             </div>
           </div>
-          <div>
-            <h2 className="text-3xl font-semibold text-[var(--ink)]">Compliance</h2>
-            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="rounded-2xl border bg-white p-4" style={{borderColor:"rgba(11,18,32,0.15)"}}>
-                <div className="flex items-center gap-2"><Layers className="w-5 h-5"/><div className="font-medium text-sm">Tier IV Design</div></div>
-                <p className="mt-2 text-xs text-slate-600">Fault‑tolerant, concurrently maintainable.</p>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+function Why() {
+  return (
+    <section id="why" className="py-20 bg-white">
+      <div className="mx-auto max-w-7xl px-6">
+        <motion.div {...fade} className="max-w-2xl">
+          <h2 className="text-4xl font-bold" style={{ color: BRAND.text }}>Why Hypernext</h2>
+          <p className="mt-3" style={{ color: BRAND.muted }}>
+            Reliability, density, and clean power without clutter. We build for performance and clarity.
+          </p>
+        </motion.div>
+        <div className="mt-10 grid sm:grid-cols-3 gap-6">
+          {features.map((f) => (
+            <motion.div key={f.title} {...fade}>
+              <div className="flex items-start gap-3">
+                {f.icon}
+                <div>
+                  <div className="text-base font-medium" style={{ color: BRAND.primary }}>{f.title}</div>
+                  <div className="text-sm mt-1" style={{ color: BRAND.muted }}>{f.desc}</div>
+                </div>
               </div>
-              <div className="rounded-2xl border bg-white p-4" style={{borderColor:"rgba(11,18,32,0.15)"}}>
-                <div className="flex items-center gap-2"><Shield className="w-5 h-5"/><div className="font-medium text-sm">SOC 2‑as‑a‑Service</div></div>
-                <p className="mt-2 text-xs text-slate-600">Shared controls, continuous evidence.</p>
-              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Products() {
+  return (
+    <section id="products" className="py-20" style={{ background: BRAND.bgLight }}>
+      <div className="mx-auto max-w-7xl px-6">
+        <motion.div {...fade} className="max-w-2xl">
+          <h2 className="text-4xl font-bold" style={{ color: BRAND.text }}>Products & Services</h2>
+          <p className="mt-3" style={{ color: BRAND.muted }}>
+            Colocation, dedicated AI clusters, GPUaaS, and HyperOne OS.
+          </p>
+        </motion.div>
+        <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {products.map((p) => (
+            <Card key={p.title} className="flex flex-col">
+              <CardHeader>
+                <div className="flex items-center gap-2">{p.icon}<span className="font-medium" style={{ color: BRAND.primary }}>{p.title}</span></div>
+              </CardHeader>
+              <CardContent className="text-sm" style={{ color: BRAND.muted }}>
+                <p>{p.desc}</p>
+                <ul className="mt-4 space-y-2">
+                  {p.bullets.map((b) => (
+                    <li key={b} className="flex items-start gap-2"><Check className="h-4 w-4" style={{ color: BRAND.primary }} /> <span>{b}</span></li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function HyperOne() {
+  return (
+    <section id="hyperone" className="py-20 bg-white">
+      <div className="mx-auto max-w-7xl px-6 grid lg:grid-cols-2 gap-10 items-start">
+        <motion.div {...fade}>
+          <h2 className="text-4xl font-bold" style={{ color: BRAND.text }}>HyperOne OS</h2>
+          <p className="mt-3" style={{ color: BRAND.muted }}>
+            Single control plane for power, cooling, network, compute, and security. Policy, observability, open APIs.
+          </p>
+          <ul className="mt-6 grid grid-cols-2 gap-3 text-sm" style={{ color: BRAND.text }}>
+            {[
+              "Policy & guardrails",
+              "Cluster automation",
+              "Energy & cooling",
+              "APIs & integrations",
+            ].map((t) => (
+              <li key={t} className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full" style={{ background: BRAND.primary }} /> {t}</li>
+            ))}
+          </ul>
+          <div className="mt-6 flex gap-3">
+            <Button asChild><a href="#contact" aria-label="Request a HyperOne OS demo">Request a demo</a></Button>
+            <Button asChild variant="secondary"><a href="#">Download whitepaper</a></Button>
+          </div>
+        </motion.div>
+        <motion.div {...fade}>
+          <div className="rounded-lg border p-6" style={{ background: "#fff", borderColor: BRAND.line }}>
+            <div className="text-sm" style={{ color: BRAND.muted }}>Control surfaces</div>
+            <div className="mt-3 grid grid-cols-2 gap-3">
+              {["Status", "Approvals", "Cooling", "Provisioning"].map((k) => (
+                <div key={k} className="h-24 rounded border flex items-center justify-center text-xs" style={{ borderColor: BRAND.line, color: BRAND.muted }}>{k}</div>
+                
+              ))}
             </div>
           </div>
-        </div>
-      </section>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
 
-      {/* CTA */}
-      <section className="py-24 text-center">
-        <h2 className="text-3xl font-semibold text-[var(--ink)]">Design your AI‑Ready Hall</h2>
-        <p className="mt-4 text-slate-600 max-w-xl mx-auto">Send your cluster shape (GPU type, racks, density, network) and get a hall‑level reference design with power, cooling, and interconnect options.</p>
-        <div className="mt-8 flex justify-center gap-3">
-          <Button size="lg" variant="brand">Request Design</Button>
-          <Button size="lg" variant="outline">Contact Sales</Button>
+function Campuses() {
+  return (
+    <section id="campuses" className="py-20 bg-white">
+      <div className="mx-auto max-w-7xl px-6">
+        <motion.div {...fade} className="flex items-end justify-between gap-6">
+          <div>
+            <h2 className="text-4xl font-bold" style={{ color: BRAND.text }}>Campuses & Regions</h2>
+            <p className="mt-3" style={{ color: BRAND.muted }}>CLS proximity, carrier-rich, renewable corridors—sub-5ms at scale.</p>
+          </div>
+          <Button asChild><a href="#contact" className="hidden md:inline-flex">Request a site visit</a></Button>
+        </motion.div>
+        <div className="mt-10 grid md:grid-cols-2 gap-6">
+          {campuses.map((c) => (
+            <Card key={c.city}>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle>{c.city}</CardTitle>
+                  <span className="text-xs rounded-full px-2 py-1 border" style={{ background: "#fff", color: BRAND.primary, borderColor: BRAND.line }}>{c.badge}</span>
+                </div>
+              </CardHeader>
+              <CardContent className="text-sm" style={{ color: BRAND.muted }}>
+                <div className="mb-3 flex items-center gap-2" style={{ color: BRAND.text }}>
+                  <Zap className="h-4 w-4" style={{ color: BRAND.primary }} /> {c.mw}
+                </div>
+                <ul className="space-y-2">
+                  {c.points.map((p) => (
+                    <li key={p} className="flex items-start gap-2"><Check className="h-4 w-4" style={{ color: BRAND.primary }} /> <span>{p}</span></li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          ))}
         </div>
-      </section>
+      </div>
+    </section>
+  );
+}
 
-      {/* Footer */}
-      <footer className="py-12 border-t text-sm" style={{background:"linear-gradient(180deg, rgba(0,255,64,0.04) 0%, rgba(255,255,255,1) 100%)", borderColor:"rgba(2,6,23,0.06)"}}>
-        <div className="mx-auto max-w-7xl px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
+function Sustainability() {
+  return (
+    <section id="sustainability" className="py-20" style={{ background: BRAND.bgLight }}>
+      <div className="mx-auto max-w-7xl px-6">
+        <motion.div {...fade} className="max-w-3xl">
+          <h2 className="text-4xl font-bold" style={{ color: BRAND.text }}>Sustainability</h2>
+          <p className="mt-3" style={{ color: BRAND.muted }}>
+            Our campuses are powered by <strong style={{color: BRAND.primary}}>100% renewable energy</strong> including a 600 MW captive solar plant (Khavda). We practice hourly REC matching, water stewardship, and continuous efficiency improvements.
+          </p>
+        </motion.div>
+
+        {/* Pillars */}
+        <div className="mt-8 grid sm:grid-cols-3 gap-6">
+          {[
+            { icon: Leaf, h: "100% Renewable Energy", p: "24/7 clean supply via PPAs + firming; hourly REC matching." },
+            { icon: Zap, h: "High Efficiency", p: "PUE ≤ 1.15 design, hot/cold aisle + liquid-ready bays." },
+            { icon: Droplet, h: "Water Stewardship", p: "Adiabatic-free modes, reuse & monitoring for lower WUE." },
+          ].map((b) => (
+            <div key={b.h} className="flex items-start gap-3">
+              <b.icon className="h-5 w-5" style={{ color: BRAND.primary }} />
+              <div>
+                <div className="text-base font-medium" style={{ color: BRAND.primary }}>{b.h}</div>
+                <div className="text-sm mt-1" style={{ color: BRAND.muted }}>{b.p}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Assurance row */}
+        <div className="mt-10 grid sm:grid-cols-4 gap-3 text-sm">
+          {[
+            { label: "ISO 27001", Icon: Shield },
+            { label: "ISO 22301", Icon: Shield },
+            { label: "ISO 14001", Icon: Shield },
+            { label: "SOC 2 (ready)", Icon: Award },
+          ].map(({ label, Icon }) => (
+            <div key={label} className="flex items-center gap-2 rounded border px-3 py-2" style={{ borderColor: BRAND.line, background: "#fff" }}>
+              <Icon className="h-4 w-4" style={{ color: BRAND.primary }} />
+              <span style={{ color: BRAND.text }}>{label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Customers() {
+  return (
+    <section id="customers" className="py-20 bg-white">
+      <div className="mx-auto max-w-7xl px-6">
+        <h2 className="text-4xl font-bold" style={{ color: BRAND.text }}>Built for regulated & performance-critical workloads</h2>
+        <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {customers.map((c) => (
+            <Card key={c.name}>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2"><Shield className="h-5 w-5" style={{ color: BRAND.primary }} />{c.name}</CardTitle>
+              </CardHeader>
+              <CardContent className="text-sm" style={{ color: BRAND.muted }}>{c.copy}</CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function News() {
+  return (
+    <section id="news" className="py-20" style={{ background: BRAND.bgLight }}>
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="flex items-end justify-between">
+          <h2 className="text-4xl font-bold" style={{ color: BRAND.text }}>News & Updates</h2>
+          <a href="#" className="text-sm" style={{ color: BRAND.primary }}>View all</a>
+        </div>
+        <div className="mt-8 grid md:grid-cols-3 gap-6">
+          {news.map((n) => (
+            <Card key={n.title}>
+              <CardHeader>
+                <CardTitle>{n.title}</CardTitle>
+                <div className="text-xs" style={{ color: BRAND.muted }}>{n.date}</div>
+              </CardHeader>
+              <CardContent>
+                <Button asChild variant="secondary"><a href={n.link}>Read more</a></Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Careers() {
+  return (
+    <section id="careers" className="py-20 bg-white">
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="grid lg:grid-cols-2 gap-10 items-center">
           <div>
-            <h4 className="font-medium mb-2">Locations</h4>
-            <ul className="space-y-1 text-slate-600">
-              <li className="flex items-center gap-2"><MapPin className="w-4 h-4" /> Hyderabad</li>
-              <li className="flex items-center gap-2"><MapPin className="w-4 h-4" /> Andhra Pradesh</li>
-              <li className="flex items-center gap-2"><MapPin className="w-4 h-4" /> Vizag (CLS)</li>
-              <li className="flex items-center gap-2"><MapPin className="w-4 h-4" /> Kutch Solar</li>
-            </ul>
+            <h2 className="text-4xl font-bold" style={{ color: BRAND.text }}>Join the builders</h2>
+            <p className="mt-3" style={{ color: BRAND.muted }}>Electrical, mechanical, networks, software, security, operations—world-class team pushing sustainable AI infrastructure.</p>
+            <div className="mt-6 flex gap-3">
+              <Button>Open roles</Button>
+              <Button variant="secondary">Early talent</Button>
+            </div>
           </div>
-          <div>
-            <h4 className="font-medium mb-2">Contact</h4>
-            <ul className="space-y-1 text-slate-600">
-              <li className="flex items-center gap-2"><Phone className="w-4 h-4" /> +91‑XXXXXXXXXX</li>
-              <li className="flex items-center gap-2"><Mail className="w-4 h-4" /> hello@hypernext.example</li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-medium mb-2">Compliance</h4>
-            <ul className="space-y-1 text-slate-600">
-              <li>Tier IV Design</li>
-              <li>SOC 2‑as‑a‑Service</li>
-              <li>ISO 27001/27701 (roadmap)</li>
-            </ul>
+          <div className="grid sm:grid-cols-2 gap-4">
+            {["Tier IV operations", "AI cluster engineering", "Sustainability & energy", "Program management"].map((k) => (
+              <Card key={k}><CardContent className="p-4 text-sm" style={{ color: BRAND.muted }}>{k}</CardContent></Card>
+            ))}
           </div>
         </div>
-        <div className="mt-8 text-center text-xs text-slate-500">© {new Date().getFullYear()} Hypernext Data Center Limited. HyperOne™ is a trademark of Hypernext. All rights reserved.</div>
-      </footer>
+      </div>
+    </section>
+  );
+}
+
+function Contact() {
+  return (
+    <section id="contact" className="py-20" style={{ background: BRAND.bgLight }}>
+      <div className="mx-auto max-w-7xl px-6 grid lg:grid-cols-2 gap-10">
+        <div>
+          <h2 className="text-4xl font-bold" style={{ color: BRAND.text }}>Let's build your footprint</h2>
+          <p className="mt-3" style={{ color: BRAND.muted }}>Tell us about density targets, latency needs, and sovereignty requirements. Our architects will propose a reference design and power roadmap.</p>
+          <div className="mt-6 space-y-3 text-sm" style={{ color: BRAND.text }}>
+            <div className="flex items-center gap-2"><MapPin className="h-4 w-4" style={{ color: BRAND.primary }} /> Hyderabad • Vizag (Visakhapatnam)</div>
+            <div className="flex items-center gap-2"><Phone className="h-4 w-4" style={{ color: BRAND.primary }} /> +91 9878423333</div>
+            <div className="flex items-center gap-2"><Mail className="h-4 w-4" style={{ color: BRAND.primary }} /> info@hypernxt.com</div>
+          </div>
+        </div>
+        <Card>
+          <CardHeader><CardTitle>Request a design session</CardTitle></CardHeader>
+          <CardContent>
+            <form className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {[
+                { name: "name", label: "Full name", type: "text" },
+                { name: "email", label: "Work email", type: "email" },
+                { name: "company", label: "Company", type: "text" },
+                { name: "workload", label: "Workload (AI/Fintech/etc.)", type: "text" },
+              ].map((f) => (
+                <div key={f.name} className="col-span-1">
+                  <label className="block text-xs" style={{ color: BRAND.muted }}>{f.label}</label>
+                  <input type={f.type} name={f.name} className="w-full rounded-md bg-white border px-3 py-2 text-sm" style={{ color: BRAND.text, borderColor: BRAND.line }} />
+                </div>
+              ))}
+              <div className="sm:col-span-2">
+                <label className="block text-xs" style={{ color: BRAND.muted }}>Density & timeline</label>
+                <textarea className="w-full rounded-md bg-white border px-3 py-2 text-sm h-24" style={{ color: BRAND.text, borderColor: BRAND.line }} placeholder="e.g., 40MW in 12 months; 70kW/rack; liquid ready" />
+              </div>
+              <div className="sm:col-span-2"><Button className="w-full">Submit</Button></div>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    </section>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="border-t bg-white">
+      <div className="mx-auto max-w-7xl px-6 py-10 grid md:grid-cols-4 gap-8">
+        <div>
+          <BrandLogo />
+          <p className="mt-3 text-sm" style={{ color: BRAND.muted }}>Building world-class, sustainable, AI-ready data centers across India.</p>
+        </div>
+        {[
+          { h: "Company", l: ["About", "Leadership", "Careers", "News"] },
+          { h: "Products", l: ["Colocation", "GPUaaS", "Energy & Edge", "HyperOne OS"] },
+          { h: "Legal", l: ["Privacy", "Security", "Terms", "Compliance"] },
+        ].map((g) => (
+          <div key={g.h}>
+            <h4 className="font-semibold mb-3" style={{ color: BRAND.primary }}>{g.h}</h4>
+            <ul className="space-y-2 text-sm">
+              {g.l.map((x) => (
+                <li key={x}><a href="#" className="text-slate-600 hover:text-slate-900">{x}</a></li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+      <div className="px-6 py-6 text-center text-xs text-slate-500">
+        {"\u00A9 "}{new Date().getFullYear()} Hypernext Data Center Limited. All rights reserved.
+      </div>
+    </footer>
+  );
+}
+
+/*************************************************
+ * PAGE ENTRY
+ *************************************************/
+export default function HypernextSite() {
+  return (
+    <div className="min-h-screen bg-white" style={{ color: BRAND.text }}>
+      <SmokeTests />
+      <Header />
+      <Hero />
+      <Why />
+      <Products />
+      <HyperOne />
+      <Campuses />
+      <Sustainability />
+      <Customers />
+      <News />
+      <Careers />
+      <Contact />
+      <Footer />
     </div>
   );
 }
