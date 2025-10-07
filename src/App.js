@@ -51,9 +51,9 @@ function Button({
 }) {
   const base = "inline-flex items-center justify-center rounded-xl transition-all duration-200";
   const variants = {
-    solid: "bg-blue-600 text-white hover:bg-blue-700",
-    outline: "border border-blue-600 text-blue-600 hover:bg-blue-50",
-    ghost: "text-blue-600 hover:bg-blue-50",
+    solid: "bg-[#00ff64e6] text-white hover:bg-[#1d263d]",
+    outline: "border border-[#00ff64e6] text-blue-600 hover:bg-[#1d263d]",
+    ghost: "text-[#00ff64e6] hover:bg-[#1d263d]",
   };
   const sizes = {
     sm: "px-2 py-1 text-sm",
@@ -437,15 +437,30 @@ function HyperOne() {
           </div>
         </motion.div>
         <motion.div {...fade}>
-          <div className="rounded-lg border p-6" style={{ background: "#fff", borderColor: BRAND.line }}>
-            <div className="text-sm" style={{ color: BRAND.muted }}>Control surfaces</div>
-            <div className="mt-3 grid grid-cols-2 gap-3">
-              {["Status", "Approvals", "Cooling", "Provisioning"].map((k) => (
-                <div key={k} className="h-24 rounded border flex items-center justify-center text-xs" style={{ borderColor: BRAND.line, color: BRAND.muted }}>{k}</div>
-                
-              ))}
-            </div>
-          </div>
+          <div
+  className="rounded-lg border p-6 shadow-sm transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,255,100,0.15)]"
+  style={{ background: "#fff", borderColor: "rgba(0,255,100,0.3)" }}
+>
+  <div className="text-sm font-medium" style={{ color: "rgba(1, 11, 5, 0.94)" }}>
+    Control surfaces
+  </div>
+
+  <div className="mt-3 grid grid-cols-2 gap-3">
+    {["Status", "Approvals", "Cooling", "Provisioning"].map((k, i) => (
+      <div
+        key={k}
+        className="h-24 rounded border-2 flex items-center justify-center text-sm font-medium transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_15px_rgba(0,255,100,0.3)]"
+        style={{
+          borderColor: "rgba(0,255,100,0.25)",
+          color: "#0b1220",
+        }}
+      >
+        {k}
+      </div>
+    ))}
+  </div>
+</div>
+
         </motion.div>
       </div>
     </section>
