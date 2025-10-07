@@ -25,7 +25,7 @@ import {
 } from "lucide-react";
 
 /*************************************************
- * BRAND SYSTEM (from logo)
+ * BRAND SYSTEM (from logo)  - button : #2563eb
  *************************************************/
 const BRAND = {
   primary: "#003366", // navy
