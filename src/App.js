@@ -1,5 +1,6 @@
 import React from "react";
 import logo from "./assets/images/Hypernext Logo Blue.png";
+import datacenterrenewable from "./assets/images/data-center-renewable.png";
 import { motion } from "framer-motion";
 import {
   Check,
@@ -338,15 +339,17 @@ function Hero() {
         </motion.div>
 
         <motion.div {...fade} className="lg:col-span-5">
-          <div className="rounded-lg border p-6" style={{ background: "#fff", borderColor: BRAND.line }}>
-            <div className="text-sm" style={{ color: BRAND.muted }}>Reference layout</div>
-            <div className="mt-3 grid grid-cols-3 gap-3">
-              {Array.from({ length: 9 }).map((_, i) => (
-                <div key={i} className="h-16 rounded border" style={{ borderColor: BRAND.line, background: BRAND.bgLight }} />
-              ))}
-            </div>
-          </div>
-        </motion.div>
+  <div
+    className="rounded-lg border overflow-hidden"
+    style={{ background: "#fff", borderColor: BRAND.line }}
+  >
+    <img
+      src={datacenterrenewable}
+      alt="Responsible data center powered by renewable energy"
+      className="w-full h-auto object-cover"
+    />
+  </div>
+</motion.div>
       </div>
     </section>
   );
