@@ -1,6 +1,7 @@
 import React from "react";
 import logo from "./assets/images/Hypernext Logo Blue.png";
 import datacenterrenewable from "./assets/images/data-center-renewable.png";
+import { Menu, X } from "lucide-react";
 import { motion } from "framer-motion";
 import {
   Check,
@@ -260,7 +261,7 @@ function SmokeTests() {
 
 /*************************************************
  * LAYOUT SECTIONS (MINIMAL)
- *************************************************/
+ 
 function Header() {
   return (
     <header className="sticky top-0 z-50 border-b bg-white/90 backdrop-blur">
@@ -285,6 +286,80 @@ function Header() {
     </header>
   );
 }
+
+*************************************************/
+
+function Header() {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <header className="sticky top-0 z-50 border-b bg-white/90 backdrop-blur">
+      <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
+        <BrandLogo />
+
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex gap-6 text-sm">
+          {nav.map((n) => (
+            <a
+              key={n.href}
+              href={n.href}
+              className="text-slate-600 hover:text-slate-900 transition-colors"
+            >
+              {n.label}
+            </a>
+          ))}
+        </nav>
+
+        {/* Desktop Buttons */}
+        <div className="hidden md:flex items-center gap-3">
+          <Button asChild variant="secondary">
+            <a href="#contact">Talk to Sales</a>
+          </Button>
+          <Button asChild>
+            <a href="#products">Launch Portal</a>
+          </Button>
+        </div>
+
+        {/* Mobile Menu Toggle */}
+        <button
+          onClick={() => setOpen(!open)}
+          className="md:hidden p-2 rounded-lg border border-slate-200"
+        >
+          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
+      </div>
+
+      {/* Mobile Dropdown */}
+      {open && (
+        <div className="md:hidden border-t bg-white/95 backdrop-blur-sm">
+          <nav className="flex flex-col p-4 space-y-3 text-sm">
+            {nav.map((n) => (
+              <a
+                key={n.href}
+                href={n.href}
+                className="text-slate-700 text-center hover:text-slate-900"
+                onClick={() => setOpen(false)}
+              >
+                {n.label}
+              </a>
+            ))}
+            <div className="flex flex-col gap-2 mt-3">
+              <Button asChild size="sm">
+                <a href="#contact">Talk to Sales</a>
+              </Button>
+              <Button asChild variant="secondary" size="sm">
+                <a href="#products">Launch Portal</a>
+              </Button>
+            </div>
+          </nav>
+        </div>
+      )}
+    </header>
+  );
+}
+
+
+
 
 function Hero() {
   return (
