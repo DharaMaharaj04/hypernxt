@@ -145,8 +145,8 @@ const nav = [
 ];
 
 const stats = [
-  { value: "110 MW", label: "Hyderabad IT Load" },
-  { value: "192 MW", label: "Vizag IT Load (CLS)" },
+  { value: "2250 MW", label: "Hyderabad Campus" },
+  { value: "1250 MW", label: "Vizag Campus" },
   { value: "Tier IV", label: "Fault-Tolerant" },
   { value: "99.995%", label: "Availability" },
   { value: "≤ 1.15", label: "PUE target" },
