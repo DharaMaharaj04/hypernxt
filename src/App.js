@@ -145,8 +145,9 @@ const nav = [
 ];
 
 const stats = [
-  { value: "2250 MW", label: "Hyderabad Campus" },
-  { value: "1250 MW", label: "Vizag Campus" },
+  { value: "110 MW", label: "Hyderabad Campus" },
+  { value: "250 MW", label: "Campus-1, Vizag" },
+  { value: "250 MW", label: "Campus-2, Vizag" },
   { value: "Tier IV", label: "Fault-Tolerant" },
   { value: "99.995%", label: "Availability" },
   { value: "≤ 1.15", label: "PUE target" },
@@ -178,9 +179,15 @@ const campuses = [
     points: ["Fintech and SaaS edge", "Cloud on-ramps", "Liquid-ready bays"],
   },
   {
-    city: "Vizag (Visakhapatnam)",
+    city: "Campus 1, Vizag (Visakhapatnam)",
     badge: "DC + CLS",
-    mw: "192 MW",
+    mw: "250 MW",
+    points: ["Tier IV build", "Cable Landing Station adjacency", "Green power PPAs"],
+  },
+  {
+    city: "Campus 2, Vizag (Visakhapatnam)",
+    badge: "DC + CLS",
+    mw: "250 MW",
     points: ["Tier IV build", "Cable Landing Station adjacency", "Green power PPAs"],
   },
 ];
@@ -250,7 +257,7 @@ function SmokeTests() {
       console.assert(nav.length === 9, "nav should have 9 items");
       console.assert(products.some((p) => /HyperOne/.test(p.title)), "HyperOne product present");
       console.assert(campuses.length === 2, "Two campuses only (Hyd + Vizag)");
-      console.assert(campuses[0].mw === "110 MW" && campuses[1].mw === "192 MW", "MW figures correct");
+      console.assert(campuses[0].mw === "110 MW" && campuses[1].mw === "250 MW", "MW figures correct");
       console.assert(/CLS/.test(campuses[1].badge), "Vizag badge includes CLS");
     } catch (e) {
       console.error("Smoke tests error", e);
